@@ -37,6 +37,39 @@ class SAMPServer
 		$result = $this->execute("ps cax | grep {$this->server["Exe"]}");
 		return !empty($result);
 	}
+
+	public function getConfig($var)
+	{
+		$value = $this->execute("grep -oP '(?<=$var ).*' server.cfg");
+		return trim($value);
+	}
+
+	public function setConfig($var,$value)
+	{
+		$this->execute("sed -i -- 's/$var {$this->getConfig($var)}/$var $value/g' server.cfg");
+		return true;
+	}
+
+	public function startServer()
+	{
+		if($this->isRunning())
+			return false;
+
+		$this->execute("./{$this->server["Exe"]} &");
+		return true;
+	}
+
+	public function stopServer($removelog = false)
+	{
+		if(!$this->isRunning())
+			return false;
+
+		if($removelog)
+			$this->execute("rm server_log.txt");
+
+		$this->execute("killall -9 {$this->server["Exe"]}");
+		return true;
+	}
 }
 
 ?>
