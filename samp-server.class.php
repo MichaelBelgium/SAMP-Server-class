@@ -55,7 +55,11 @@ class SAMPServer
 		if($this->isRunning())
 			return false;
 
-		$this->execute("./{$this->server["Exe"]} &");
+		if(!file_exists("/home/{$this->ssh["User"]}/".(($this->server["Dir"] !== "~" || $this->server["Dir"] !== ".") ? "{$this->server["Dir"]}/": "")."{$this->server["Exe"]}"))
+			return false;
+
+		$this->setConfig("port",$port);
+		ssh2_exec($ssh, "cd {$this->server["Dir"]} && ./{$this->server["Exe"]} &");
 		return true;
 	}
 
@@ -68,6 +72,14 @@ class SAMPServer
 			$this->execute("rm server_log.txt");
 
 		$this->execute("killall -9 {$this->server["Exe"]}");
+		return true;
+	}
+
+	public function restartServer($removelog = false)
+	{
+		$this->stopServer($removelog);
+		sleep(1);
+		$this->startServer();
 		return true;
 	}
 }
