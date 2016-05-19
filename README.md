@@ -10,6 +10,12 @@ public getConfig($var)
 public setConfig($var,$value)
 public startServer()
 public stopServer($removelog = false)
+public restartServer($removelog = false)
 
 private execute($command)
 ```
+
+<h1>Example</h1>
+
+An example is available in the example script. 
+Do note it's recommended to create new instances in a try-catch.
