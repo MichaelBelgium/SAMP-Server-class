@@ -9,12 +9,12 @@ class SAMPServer
 	function __construct($user, $password, $exe = "samp03svr", $port = 7777, $dir = "~", $ip = "127.0.0.1", $sshport = 22)
 	{
 		$this->ssh["IP"] = $ip;
-		$this->ssh["Port"] = $sshport;
+		$this->ssh["Port"] = (int)$sshport;
 		$this->ssh["User"] = $user;
 		$this->ssh["Password"] = $password;
 		$this->server["Dir"] = $dir;
 		$this->server["Exe"] = $exe;
-		$this->server["Port"] = $port;
+		$this->server["Port"] = (int)$port;
 
 		if(!($this->con = ssh2_connect($this->ssh["IP"]))) 
 			throw new Exception("Can't connect to SSH server ({$this->ssh["IP"]})");
@@ -58,8 +58,10 @@ class SAMPServer
 		if(!file_exists("/home/{$this->ssh["User"]}/".(($this->server["Dir"] !== "~" || $this->server["Dir"] !== ".") ? "{$this->server["Dir"]}/": "")."{$this->server["Exe"]}"))
 			return false;
 
-		$this->setConfig("port",$port);
-		ssh2_exec($ssh, "cd {$this->server["Dir"]} && ./{$this->server["Exe"]} &");
+		if($this->getConfig("port") != $this->server["Port"])
+			$this->setConfig("port",$this->server["Port"]);
+
+		ssh2_exec($this->con, "cd {$this->server["Dir"]} && ./{$this->server["Exe"]} &");
 		return true;
 	}
 
