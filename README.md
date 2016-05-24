@@ -11,6 +11,7 @@ public setConfig($var,$value)
 public startServer()
 public stopServer($removelog = false)
 public restartServer($removelog = false)
+public getLog($lines = 10)
 
 private execute($command)
 ```
