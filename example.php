@@ -8,6 +8,9 @@
 		//$server = new SAMPServer("michael1","abc123","samp03svr10");
 		//$server = new SAMPServer("michael1","abc123");
 		//...
+		$server->setConfig("rcon_password","myrconpassword");
+		$server->setConfig("maxplayers",100);
+		//...
 	}
 	catch (Exception $e) 
 	{
@@ -51,6 +54,7 @@
 			if(!empty($action)) echo "<p>Server has been $action";
 		?>
 		<div>
+			<h1>Control/info</h1>
 			<p><a href="?action=start">Start</a> / <a href="?action=stop">stop</a> / <a href="?action=restart">restart</a> the server.</p>
 			<p>
 				<table>
@@ -70,6 +74,11 @@
 					</tbody>
 				</table>
 			</p>
+		</div>
+		
+		<div>
+			<h1>Log</h1>
+			<p><?php echo $server->getLog(25); ?></p>
 		</div>
 	</body>
 </html>
