@@ -84,6 +84,12 @@ class SAMPServer
 		$this->startServer();
 		return true;
 	}
+	
+	public function getLog($lines = 10)
+	{
+		$output = $this->execute("tail -n $lines server_log.txt");
+		return $output;
+	}
 }
 
 ?>
